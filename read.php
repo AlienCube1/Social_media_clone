@@ -1,6 +1,33 @@
 <?php
 include_once('config.php');
 
+function show_post(){
+    global $pdo;
+    echo"testis",
+    $id = 1;
+    $sql ="SELECT * FROM Postovi";
+  	$sql_stmt = $pdo->prepare($sql);
+  	$sql_stmt->execute(['id'=>$id]); //// Ne shvacam zasto je ovo potrebno, dosl. samo pointa na to sta je id koji ne postoji u queryu?
+    $post = $sql_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    /*
+    foreach($post as $row){
+      echo $row['Title'] . "<br>";
+    }*/
+
+
+}
+////Dodaj u bazu kad se netko prijavio
+function login_stamp($username){
+  global $pdo;
+  $date = date("d/m/Y");
+  $time = date("h:i:sa");
+  $insert_sql = "INSERT INTO Login_stamps(username,date_of_login,time_of_login) VALUES(:username, :date_of, :time_of)";
+  $insert_stmt = $pdo->prepare($insert_sql);
+  $insert_stmt->execute(['username'=>$username, 'date_of'=>$date, 'time_of'=>$time]);
+}
+
+
 function login($username,$password){
 
   global $pdo;
@@ -10,6 +37,7 @@ function login($username,$password){
 	$stmt->execute(['username' => $username, 'password' => $hashed, 'confirmed' => 1]);
 	$post = $stmt->fetchAll();
   if($post){
+    login_stamp($username);
     echo("TU");
     session_start();
     $_SESSION['username'] = $username;
@@ -35,6 +63,4 @@ if(isset($_POST['login_button'])){
   $password = $_POST['password'];
   login($username, $password);
 }
-
-
- ?>
+//show_post();

@@ -2,16 +2,31 @@
 
 include_once("config.php");
 include('header.php');
+
+function insert_post($title, $desc){
+  session_start();
+  $username = $_SESSION['username'];
+  global $pdo;
+  $date_of = date("d/m/Y");
+  $time_of = date("h:i:sa");
+  $sql = "INSERT INTO Postovi(Title,Description,Time_of_post,Date_of_post,Username, Likes) VALUES (:Title, :Description, :Time_of_post, :Date_of_post, :Username, :Likes)";
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute(['Title' => $title, 'Description' => $desc, 'Time_of_post' => $time_of, 'Date_of_post' => $date_of, 'Username' => $username, 'Likes' => 0]);
+  header("location: main.php", true, 301); exit;
+
+
+}
+
+
 $confirm_code = rand();
-
-
 function register_insert($username, $password, $email, $code){
   global $pdo;
   global $confirm_code;
+  $date_of = date("d/m/Y");
   $hashed = md5($password);
-  $sql = "INSERT INTO Register(username,password,email,code) VALUES (:username, :password, :email, :code)";
+  $sql = "INSERT INTO Register(username,password,email,code,date_of) VALUES (:username, :password, :email, :code, :date_of)";
   $stmt = $pdo->prepare($sql);
-  $stmt->execute(['username' => $username, 'password' => $hashed, 'email' => $email, 'code' => $code]);
+  $stmt->execute(['username' => $username, 'password' => $hashed, 'email' => $email, 'code' => $code, 'date_of' => $date_of]);
   $message = "
 			Potvrdite Vaš email kako bi počeli koristiti našu web stranicu.
 			Pritisnite link ispod kako bi potvrdili svoj račun.
@@ -63,7 +78,7 @@ if(isset($_POST['register_button'])){
 
         header("location: main.php");
         unset($_SESSION['user_email_exists']);
-        
+
 }
   else{
     session_start();
@@ -80,4 +95,11 @@ elseif($password != $repeatpw){
   echo "Lozinke se ne podudaraju!";
 }
 }
+
+if(isset($_POST['create_post'])){
+  $title = $_POST['Title'];
+  $desc  = $_POST['Desc'];
+  insert_post($title, $desc);
+}
+
  ?>

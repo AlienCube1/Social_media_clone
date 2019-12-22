@@ -1,3 +1,15 @@
+<?php
+session_start();
+if(!$_SESSION['username']){
+	header("location: index.php", true, 301); exit;
+
+}
+
+
+
+ ?>
+
+
 
 <html>
 <head>
@@ -27,52 +39,55 @@
     </nav>
   </header>
   <div id="content">
-    <div id="posts">
-      <div>
-      <p>Different posts</p>
-      </div>
 
-      <div>
-      <p>Different posts</p>
-      </div>
+		<form action='create.php' method="POST">
+			Title
+			<input type='text' name='Title'>
+			<br>Desc
+			<input type='text' name='Desc'>
+			<input type='submit' name='create_post'>
+		</form>
 
-      <div>
-      <p>Different posts</p>
-      </div>
 
-      <div>
-      <p>Different posts</p>
-      </div>
+		<div id="posts">
 
-      <div>
-      <p>Different posts</p>
-      </div>
+<!--- Nemoj se usrat sto ti stranica ne radi kak je red, ja sam kriv, treba uredit ovaj ispis samo
+svaki row je jedan dio sto treba ispisat, zatvoris php tag napises svoj html element i opet otvoris php tag -->
+			<p><?php
+			include_once('config.php');
+			global $pdo;
+	    echo"testis",
+	    $id = 1;
+	    $sql ="SELECT * FROM Postovi";
+	  	$sql_stmt = $pdo->prepare($sql);
+	  	$sql_stmt->execute(['id'=>$id]); //// Ne shvacam zasto je ovo potrebno, dosl. samo pointa na to sta je id koji ne postoji u queryu?
+	    $post = $sql_stmt->fetchAll(PDO::FETCH_ASSOC);
+	    foreach($post as $row){
+				echo "<div>";
+				echo $row['id'] . "<br>";
+	      echo $row['Title'] . "<br>";
+				echo $row['Description'] . "<br>"; ////Recimo, ako oces drkarit opis zatvoris na kraju 67 linije tag sa '? >' ali spojeno to napises haha i onda doas html i nakon toga opet otvoris sa ' <?php'
+				echo $row['Time_of_post'] . "<br>";
+				echo $row['Date_of_post'] . "<br>";
+				echo $row['Username'] . "<br>";
+				echo $row['Likes'] . "<br>";
+				?>
+				<form action='delete.php' method='POST'>
+					<input type='hidden' name='post_id' value= '<?php echo $row['id'];     ?> '>
+					<input type='submit' name='delete_post' value='Delete'>
+				</form>
+				<form action='update.php' method='POST'>
+					 <input type='hidden' name='post_id' value= '<?php echo $row['id']; ?>'>
+					 <input type='submit' name='like_post' value='Like'>
+				</form>
+				<?php
+				echo"</div>";
+			}
 
-      <div>
-      <p>Different posts</p>
-      </div>
 
-      <div>
-      <p>Different posts</p>
-      </div>
-      <div>
-      <p>Different posts</p>
-      </div>
-      <div>
-      <p>Different posts</p>
-      </div>
-      <div>
-      <p>Different posts</p>
-      </div>
-      <div>
-      <p>Different posts</p>
-      </div>
-      <div>
-      <p>Different posts</p>
-      </div>
-      <div>
-      <p>Different posts</p>
-      </div>
+			 ?></p>
+
+
     </div>
     <div id="picsOfTheDay">
       <div>
