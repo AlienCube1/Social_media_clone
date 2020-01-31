@@ -4,10 +4,7 @@ if(!$_SESSION['username']){
 	header("location: index.php", true, 301); exit;
 
 }
-
-
-
- ?>
+?>
 
 
 
@@ -30,6 +27,9 @@ if(!$_SESSION['username']){
        <h1 id="logo"><a href="main.php">Lorem ipsum...</a></h1>
 
       </div>
+      <div class="nav center">
+      	<img src="/images/newpost.png" alt="New post" onclick="newPost()">
+      </div>
       <div class="nav right">
         <a href="main.php" class="nav-link active">Home</a>
         <a href="#about" class="nav-link">Profile</a>
@@ -39,16 +39,15 @@ if(!$_SESSION['username']){
     </nav>
   </header>
   <div id="content">
-
+  	<div id="newpost">
 		<form action='create.php' method="POST">
-			Title
+			<label class="control-label" for="Title">Title</label>
 			<input type='text' name='Title'>
-			<br>Desc
+			<label class="control-label" for="Desc">Description</label>
 			<input type='text' name='Desc'>
-			<input type='submit' name='create_post'>
+			<input class="buttons postnew" type='submit' name='create_post' value="Post">
 		</form>
-
-
+	</div>
 		<div id="posts">
 
 <!--- Nemoj se usrat sto ti stranica ne radi kak je red, ja sam kriv, treba uredit ovaj ispis samo
@@ -56,30 +55,48 @@ svaki row je jedan dio sto treba ispisat, zatvoris php tag napises svoj html ele
 			<p><?php
 			include_once('config.php');
 			global $pdo;
-	    echo"testis",
+
 	    $id = 1;
-	    $sql ="SELECT * FROM Postovi";
+	    $sql ="SELECT * FROM Postovi ORDER BY id DESC";
 	  	$sql_stmt = $pdo->prepare($sql);
 	  	$sql_stmt->execute(['id'=>$id]); //// Ne shvacam zasto je ovo potrebno, dosl. samo pointa na to sta je id koji ne postoji u queryu?
 	    $post = $sql_stmt->fetchAll(PDO::FETCH_ASSOC);
 	    foreach($post as $row){
-				echo "<div>";
-				echo $row['id'] . "<br>";
-	      echo $row['Title'] . "<br>";
-				echo $row['Description'] . "<br>"; ////Recimo, ako oces drkarit opis zatvoris na kraju 67 linije tag sa '? >' ali spojeno to napises haha i onda doas html i nakon toga opet otvoris sa ' <?php'
-				echo $row['Time_of_post'] . "<br>";
-				echo $row['Date_of_post'] . "<br>";
-				echo $row['Username'] . "<br>";
-				echo $row['Likes'] . "<br>";
+				echo "<div class='post'>";
 				?>
-				<form action='delete.php' method='POST'>
-					<input type='hidden' name='post_id' value= '<?php echo $row['id'];     ?> '>
-					<input type='submit' name='delete_post' value='Delete'>
-				</form>
+				<p class="postedBy"><?php echo $row['Username'] ?></p>
+
+
+				<p class="postTitle"><?php echo $row['Title'] ?></p>
+
+				<p class="postDesc"><?php echo $row['Description'] ?></p>
+
+				<p class="postTime"><?php echo $row['Time_of_post'] ?></p>
+
+				<p class="postDate"><?php echo $row['Date_of_post'] ?></p>
+
+				<p class="postLikes"><?php echo $row['Likes'] ?> likes</p>
+
+				<div class="buttondivs">
 				<form action='update.php' method='POST'>
 					 <input type='hidden' name='post_id' value= '<?php echo $row['id']; ?>'>
-					 <input type='submit' name='like_post' value='Like'>
+					 <input class="buttons" id="like" type='submit' name='like_post' value='Like'>
 				</form>
+				</div>
+
+				<div class="buttondivs">
+				<form action='update.php' method='POST'>
+					 <input type='hidden' name='dis_id' value= '<?php echo $row['id']; ?>'>
+					 <input class="buttons" id="dislike" type='submit' name='dis_post' value='Dislike'>
+				</form>
+				</div>
+
+				<div class="buttondivs">
+				<form action='delete.php' method='POST'>
+					<input type='hidden' name='post_id' value= '<?php echo $row['id'];     ?> '>
+					<input class="buttons" id="delete" type='submit' name='delete_post' value='Delete'>
+				</form>
+				</div>
 				<?php
 				echo"</div>";
 			}
@@ -110,3 +127,8 @@ svaki row je jedan dio sto treba ispisat, zatvoris php tag napises svoj html ele
   </div>
 </body>
 </html>
+<script type="text/javascript">
+function newPost() {
+    document.getElementById("newpost").style.visibility = "visible";
+}
+</script>
