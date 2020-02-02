@@ -91,13 +91,19 @@ svaki row je jedan dio sto treba ispisat, zatvoris php tag napises svoj html ele
 				</form>
 				</div>
 
+
+				<?php
+				if ($row['Username'] == $_SESSION['username']){?>
 				<div class="buttondivs">
 				<form action='delete.php' method='POST'>
 					<input type='hidden' name='post_id' value= '<?php echo $row['id'];     ?> '>
 					<input class="buttons" id="delete" type='submit' name='delete_post' value='Delete'>
 				</form>
-				</div>
+		</div>
+
+
 				<?php
+			}
 				echo"</div>";
 			}
 

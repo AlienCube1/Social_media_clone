@@ -32,6 +32,13 @@ function login($username,$password){
 
   global $pdo;
   $hashed = md5($password);
+
+  $get_id = "SELECT id FROM Register WHERE username = :username && password = :password";
+  $id_stmt = $pdo->prepare($get_id);
+  $id_stmt->execute(['username' => $username, 'password' => $hashed]);
+  $id_post = $id_stmt->fetch();
+
+
   $get_user = "SELECT username,password FROM Register WHERE username =:username && password =:password && confirmed = :confirmed";
 	$stmt = $pdo->prepare($get_user);
 	$stmt->execute(['username' => $username, 'password' => $hashed, 'confirmed' => 1]);
@@ -40,9 +47,11 @@ function login($username,$password){
     login_stamp($username);
     echo("TU");
     session_start();
+    $send_id = $id_post->id;
     $_SESSION['username'] = $username;
     $_SESSION['loggedin'] = true;
     $_SESSION['wrong_username_or_pw'] == false;
+    $_SESSION['id'] = $send_id;
     setcookie("username", $_POST['username'], time()+3600);
     setcookie("password", $_POST['password'], time()+3600);
     header("location: main.php");
