@@ -19,12 +19,13 @@ function show_post(){
 }
 ////Dodaj u bazu kad se netko prijavio
 function login_stamp($username){
+
   global $pdo;
   $date = date("d/m/Y");
   $time = date("h:i:sa");
-  $insert_sql = "INSERT INTO Login_stamps(username,date_of_login,time_of_login) VALUES(:username, :date_of, :time_of)";
+  $insert_sql = "INSERT INTO Login_stamps(username,date_of_login,time_of_login) VALUES(:username, :date_of_login, :time_of_login)";
   $insert_stmt = $pdo->prepare($insert_sql);
-  $insert_stmt->execute(['username'=>$username, 'date_of'=>$date, 'time_of'=>$time]);
+  $insert_stmt->execute(['username'=>$username, 'date_of_login'=>$date, 'time_of_login'=>$time]);
 }
 
 

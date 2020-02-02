@@ -112,7 +112,33 @@ svaki row je jedan dio sto treba ispisat, zatvoris php tag napises svoj html ele
 
 
     </div>
-    <div id="picsOfTheDay">
+		<div id="picsOfTheDay">
+
+		<?php
+		$Likes = 0;
+		$top_of_day = "SELECT Title,Description,Username,Likes,Date_of_post FROM Postovi ORDER BY Likes DESC LIMIT 6";
+		$top_of_day_query = $pdo->prepare($top_of_day);
+		$top_of_day_query->execute(['Likes'=>$Likes]);
+		$post_query = $top_of_day_query->fetchAll(PDO::FETCH_ASSOC);
+		//var_dump($post_query);
+		foreach($post_query as $postt) {
+			if(date("d/m/Y") == $postt['Date_of_post']){
+			echo"<div>";
+
+			?>
+				<p><?php echo "Title: " . $postt['Title']; ?></p>
+				<p><?php echo "Description: " . $postt['Description']; ?></p>
+				<p><?php echo "Posted by: " . $postt['Username']; ?></p>
+				<p><?php echo "Likes: " . $postt['Likes']; ?></p>
+			<?php
+			echo"</div>";
+				}
+
+		}
+echo "</div>";
+		 ?>
+
+    <!--<div id="picsOfTheDay">
       <div>
       <p>today's most liked post</p>
       </div>
@@ -129,7 +155,7 @@ svaki row je jedan dio sto treba ispisat, zatvoris php tag napises svoj html ele
       <p>i tako dalje</p>
       </div>
 
-    </div>
+    </div>-->
   </div>
 </body>
 </html>
