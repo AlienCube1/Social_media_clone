@@ -19,6 +19,24 @@ if(!$_SESSION['username']){
 	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 	<script src="/javascripts/application.js" type="text/javascript" charset="utf-8" async defer></script>
 	<title>Lorem ipsum...</title>
+	<script>
+	function showHint(str) {
+
+			if (str.length == 0) {
+					document.getElementById("txtHint").innerHTML = "";
+					return;
+			} else {
+					var xmlhttp = new XMLHttpRequest();
+					xmlhttp.onreadystatechange = function() {
+							if (this.readyState == 4 && this.status == 200) {
+									document.getElementById("txtHint").innerHTML = this.responseText;
+							}
+					};
+					xmlhttp.open("GET", "search.php?q=" + str, true);
+					xmlhttp.send();
+			}
+	}
+	</script>
 </head>
 <body id="mainBody">
 	<header id="nav-wrapper">
@@ -32,13 +50,24 @@ if(!$_SESSION['username']){
       </div>
       <div class="nav right">
         <a href="main.php" class="nav-link active">Home</a>
-        <a href="#about" class="nav-link">Profile</a>
+        <a href="profile.php" class="nav-link">Profile</a>
         <a href="#work" class="nav-link">Messages</a>
         <a href="logout.php" class="nav-link">Log out</a>
       </div>
+
+<!---Ovdje ti se prikazuje sta je nasao, ako ces sta mjenjat, mjenjaj to. -->
+			<form>
+				Search: <input type="text" onkeyup="showHint(this.value)">
+					</form>
+
+
+
+
+
     </nav>
   </header>
   <div id="content">
+		<p><span id="txtHint"> </span> </p>
   	<div id="newpost">
 		<form action='create.php' method="POST">
 			<label class="control-label" for="Title">Title</label>
@@ -50,8 +79,7 @@ if(!$_SESSION['username']){
 	</div>
 		<div id="posts">
 
-<!--- Nemoj se usrat sto ti stranica ne radi kak je red, ja sam kriv, treba uredit ovaj ispis samo
-svaki row je jedan dio sto treba ispisat, zatvoris php tag napises svoj html element i opet otvoris php tag -->
+
 			<p><?php
 			include_once('config.php');
 			global $pdo;
@@ -77,13 +105,16 @@ svaki row je jedan dio sto treba ispisat, zatvoris php tag napises svoj html ele
 
 				<p class="postLikes"><?php echo $row['Likes'] ?> likes</p>
 
+
+
 				<div class="buttondivs">
 				<form action='update.php' method='POST'>
 					 <input type='hidden' name='post_id' value= '<?php echo $row['id']; ?>'>
 					 <input class="buttons" id="like" type='submit' name='like_post' value='Like'>
 				</form>
-				</div>
 
+
+				</div>
 				<div class="buttondivs">
 				<form action='update.php' method='POST'>
 					 <input type='hidden' name='dis_id' value= '<?php echo $row['id']; ?>'>
@@ -138,24 +169,7 @@ svaki row je jedan dio sto treba ispisat, zatvoris php tag napises svoj html ele
 echo "</div>";
 		 ?>
 
-    <!--<div id="picsOfTheDay">
-      <div>
-      <p>today's most liked post</p>
-      </div>
 
-      <div>
-      <p>today's most liked post #2</p>
-      </div>
-
-      <div>
-      <p>today's most liked post #3</p>
-      </div>
-
-      <div>
-      <p>i tako dalje</p>
-      </div>
-
-    </div>-->
   </div>
 </body>
 </html>

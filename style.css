@@ -37,11 +37,11 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3a1c71",endCo
 
 #login {
 
-	margin-left: 12vw;
+	margin-left: 10vw;
 }
 
 #register {
-	margin-left: 6vw;
+	margin-left: 5vw;
 }
 
 .logAndSignup {
@@ -66,21 +66,11 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3a1c71",endCo
   top: 0;
   left: 0;
   z-index: 100;
-}
-
-#nav {
-  @include shadow-box;
-  display: flex;
-  flex-direction: column;
-  font-family: $headings-font;
+  background: #e5e5e0;
   height: 4em;
-  overflow: hidden;
-
-  &.nav-visible {
-    height: 100%;
-    overflow: auto;
-  }
 }
+
+
 
 .nav {
   display: flex;
@@ -99,15 +89,7 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3a1c71",endCo
 
 .left {
 	float: left;
-	background: rgb(58,28,113);
-	background: -moz-linear-gradient(90deg, rgba(58,28,113,1) 0%, rgba(215,109,119,1) 50%, rgba(255,175,123,1) 100%);
-	background: -webkit-linear-gradient(90deg, rgba(58,28,113,1) 0%, rgba(215,109,119,1) 50%, rgba(255,175,123,1) 100%);
-	background: linear-gradient(90deg, rgba(58,28,113,1) 0%, rgba(215,109,119,1) 50%, rgba(255,175,123,1) 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3a1c71",endColorstr="#ffaf7b",GradientType=1);
-}
-
-.right {
-	float: right;
+	margin-left: -1.2vw;
 	background: rgb(58,28,113);
 	background: -moz-linear-gradient(90deg, rgba(58,28,113,1) 0%, rgba(215,109,119,1) 50%, rgba(255,175,123,1) 100%);
 	background: -webkit-linear-gradient(90deg, rgba(58,28,113,1) 0%, rgba(215,109,119,1) 50%, rgba(255,175,123,1) 100%);
@@ -116,9 +98,276 @@ filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3a1c71",endCo
 	transform: skew(-20deg);
 }
 
+.right {
+	float: right;
+	margin-right: -0.5vw;
+	background: rgb(58,28,113);
+	background: -moz-linear-gradient(90deg, rgba(58,28,113,1) 0%, rgba(215,109,119,1) 50%, rgba(255,175,123,1) 100%);
+	background: -webkit-linear-gradient(90deg, rgba(58,28,113,1) 0%, rgba(215,109,119,1) 50%, rgba(255,175,123,1) 100%);
+	background: linear-gradient(90deg, rgba(58,28,113,1) 0%, rgba(215,109,119,1) 50%, rgba(255,175,123,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3a1c71",endColorstr="#ffaf7b",GradientType=1);
+	transform: skew(-20deg);
+
+}
+
+.center {
+	position: absolute;
+	margin-left: 39.4vw;
+}
+
 .nav-link {
   text-transform: uppercase;
   text-align: center;
-  border-top: 0.5px solid #ddd;
-  padding: 10px;
+  border: none;
+  color: white;
+}
+
+#logo a{
+	color: white;
+	padding-left: 2.5vw;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-right: 10px;
+
+}
+
+#logo a:hover {
+	text-decoration: none;
+	text-shadow: 2px 2px 5px black;
+	animation: expand 0.5s linear;
+	animation-fill-mode: forwards;
+}
+@keyframes expand {
+	100% {
+		padding-right: 50px;
+	}
+}
+
+@keyframes expand2 {
+	100% {
+		padding-top: 1.5em;
+	}
+}
+
+.nav-link:hover {
+	text-decoration: none;
+	text-shadow: 2px 2px 5px black;
+	color: #7bffc8;
+	animation: expand2 0.5 linear;
+	animation-fill-mode: forwards;
+}
+
+#mainBody {
+	background: #e5e5e0;
+}
+#content {
+	display: flex;
+	margin-top: 4em;
+	background: #e5e5e0;
+	position: relative;
+
+}
+
+#posts {
+
+	width: 75.5%;
+
+
+}
+
+#picsOfTheDay {
+	display: block;
+	width: 25%;
+}
+
+.post {
+	z-index: 1;
+	position: relative;
+	display: inline-block;
+	visibility: visible;
+	left: 20%;
+	padding: 0;
+	width: 70%;
+	margin-top: 3em;
+	border: 7.5px solid;
+	border-image-source: linear-gradient(45deg, #ffaf7b, #3a1c71);
+	border-image-slice: 1;
+}
+
+#picsOfTheDay div {
+	padding: 0;
+	border: 7.5px solid;
+	border-image-source: linear-gradient(180deg, #ffaf7b, #d76d77);
+	border-image-slice: 1;
+}
+
+#posts div:hover, #picsOfTheDay div:hover {
+	animation: posthover 3s infinite;
+}
+
+@keyframes posthover {
+	0% {
+		color: #0c52cc;
+	}
+	33% {
+		color: #0cb2cc;
+	}
+	67% {
+		color: #0ccc86;
+	}
+	100% {
+		color: #0c52cc;
+	}
+}
+
+.center img {
+	width: 64px;
+	height: 64px;
+}
+
+.center img:hover, .center img:focus {
+	outline: 0;
+	cursor: pointer;
+}
+
+#newpost {
+	z-index: 50;
+	visibility: hidden;
+	position: absolute;
+	width: 60vw;
+	height: 60vh;
+	margin-top: 10vh;
+	margin-left: 8vw;
+	padding-left: 20px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	border-radius: 10px;
+	color: white;
+	background: rgb(58,28,113);
+	background: -moz-linear-gradient(90deg, rgba(58,28,113,1) 0%, rgba(215,109,119,1) 50%, rgba(255,175,123,1) 100%);
+	background: -webkit-linear-gradient(90deg, rgba(58,28,113,1) 0%, rgba(215,109,119,1) 50%, rgba(255,175,123,1) 100%);
+	background: linear-gradient(90deg, rgba(58,28,113,1) 0%, rgba(215,109,119,1) 50%, rgba(255,175,123,1) 100%);
+	box-shadow: 0px 0px 7px 3px black;
+}
+
+.buttondivs {
+	display: inline-block;
+}
+.buttons {
+	border-radius:10px;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:15px;
+	padding:4px 6px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #2f6627;
+	width: 25px;
+}
+
+.buttons:focus {
+	outline: 0;
+}
+.postnew {
+	position: absolute;
+	background:linear-gradient(to bottom, #44c767 5%, #5cbf2a 100%);
+	background-color:#44c767;
+	border:1px solid #18ab29;
+	width: 100px;
+	height: 50px;
+	font-size: 24px;
+	bottom: 20px;
+	right: 20px;
+
+}
+.postnew:hover {
+	background:linear-gradient(to bottom, #5cbf2a 5%, #44c767 100%);
+	background-color:#5cbf2a;
+}
+
+
+#like {
+	background: rgb(255,175,123);
+	position: absolute;
+	bottom: 5px;
+	left: 5px;
+}
+
+#dislike {
+	background: rgb(58,28,113);
+	position: absolute;
+	bottom: 5px;
+	left: 60px;
+}
+
+#delete {
+	background: #fe1a00;
+	position: absolute;
+	top: 5px;
+	right: 5px;
+}
+
+.postedBy {
+	margin: 5px 0;
+	text-align: center;
+	font-family: "Courier New", Courier, monospace;
+	font-size: 20px;
+	color: darkviolet;
+
+}
+
+.postTime {
+	position: absolute;
+	right: 5px;
+	bottom: 0;
+	font-weight: 100;
+}
+
+.postDate {
+	position: absolute;
+	right: 90px;
+	bottom: 0;
+	font-weight: 100;
+}
+
+.postTitle {
+	margin-left: 10px;
+	margin-right: 10px;
+	font-family: "Lucida Console", Monaco, monospace;
+	font-size: 15px;
+	padding-bottom: 6px;
+
+
+}
+
+.postLikes {
+	font-family: "Garamond", Monaco, monospace;
+	position: absolute;
+	font-weight: 800;
+	bottom: 0;
+	left: 17.5%;
+
+}
+
+.hiddenInputTitle {
+	visibility: hidden;
+}
+
+.hiddenInputDesc {
+	visibility: hidden;
+}
+
+.forPosting {
+	margin-left: 10px;
+	width: 100px;
+	height: 40px;
+	border-radius: 10px;
+	background: skyblue;
+}
+
+.profile_nav {
+	position: relative;
+	top: 100px;
+	left: 80px;
+
 }

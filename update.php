@@ -78,6 +78,53 @@ function like($post_id, $user_id){
 
   }
 
+
+function change_username($current_user, $change_username, $id_of_current_user){
+  global $pdo;
+  $sql = "SELECT * FROM Register WHERE username = :username";
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute(['username'=>$change_username]);
+  $select = $stmt->fetch();
+  if(!$select){
+    $change_sql = "UPDATE Register SET username = :username WHERE id = :id";
+    $change_stmt = $pdo->prepare($change_sql);
+    $change_stmt->execute(['username'=> $change_username, "id" => $id_of_current_user ]);
+    session_start();
+    $_SESSION['Username_taken'] = false;
+    $_SESSION['username'] = $change_username;
+    header("location: profile.php");
+  }
+  else{
+    echo "Username is taken!";
+    session_start();
+    $_SESSION['Username_taken'] = true;
+    header("location:profile.php");
+  }
+}
+
+
+function change_password($username, $current_pass, $new_pass, $rpsw){
+  global $pdo;
+  $current_pass = md5($current_pass);
+  $sql = "SELECT password FROM Register WHERE username = :username";
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute(['username'=> $username]);
+  $select = $stmt->fetchAll();
+  //var_dump($select);
+  //echo $select[0]->password;
+  $hashed_current = $select[0]->password;
+  if($current_pass = $hashed_current){
+    if($new_pass == $rpsw){
+
+    $new_pass = md5($new_pass);
+    $change_pw_sql = "UPDATE Register SET password = :password WHERE username= :username";
+    $change_pw_sql_stmt = $pdo->prepare($change_pw_sql);
+    $change_pw_sql_stmt->execute(['password'=>$new_pass, 'username'=>$username]);
+    header("location:profile.php");
+  }
+}
+
+}
 if(isset($_POST['like_post'])){
   echo "You are reaching this page because im currently working on it. Gimme a bit please!" . "<br>" ;
 
@@ -95,127 +142,20 @@ if(isset($_POST['dis_post'])){
   $user_id = $_SESSION['id'];
   dislike($post_id, $user_id);
 }
-/*  echo "<br>"."Dislikeee";
-  $delete = "DELETE FROM Liked_posts WHERE post_id = :post_id";
-  $stmt = $pdo->prepare($delete);
-  $stmt->execute(['post_id' => $post_id]);
-  update_likes(get_likes($post_id,0 ),$post_id);*/
-
-
-/*function update_likes($likes, $post_id){
-
-  global $pdo;
-  $sql = "UPDATE Postovi SET Likes = :likes WHERE id = :post_id";
-  $stmt = $pdo->prepare($sql);
-  $stmt->execute(['likes'=> $likes, "post_id" => $post_id ]);
-  $_SESSION['is_liked'] = true;
-
-header("location: main.php");
+if(isset($_POST['send_change'])){
+  session_start();
+  $current_user = $_SESSION['username'];
+  $change_username = $_POST['username'];
+  $id_of_current_user = $_SESSION['id'];
+  change_username($current_user, $change_username, $id_of_current_user);
 }
-
-function dislike($likes, $post_id){
-  if($_SESSION['is_liked']){
-  $likes = $likes-2;
-  global $pdo;
-  $sql_dis = "UPDATE Postovi SET Likes = :likes WHERE id = :post_id";
-  $dis_stmt = $pdo->prepare($sql_dis);
-  $dis_stmt->execute(['likes'=>$likes, "post_id" => $post_id]);
-  //header("location: main.php");
-  $_SESSION['is_liked'] = false;
+if(isset($_POST['change_pw'])){
+  session_start();
+  $username = $_SESSION['username'];
+  $current_pass = $_POST['curr_pass'];
+  $new_pass = $_POST['new_pw'];
+  $rpsw = $_POST['rpsw'];
+  change_password($username, $current_pass, $new_pass, $rpsw);
 }
-
-}
-
-
-
-
-
-function get_likes($id){
-  global $pdo;
-
-  $sql_select = "SELECT Likes FROM Postovi WHERE id = :post_id";
-  $select_stmt = $pdo->prepare($sql_select);
-  $select_stmt->execute(['post_id' => $id]);
-  $post_select = $select_stmt->fetch(PDO::FETCH_ASSOC);
-  //var_dump($post_select);
-  foreach($post_select as $row){
-    echo (int)$row;
-  }
-
-
-  echo (int)$post_select['Likes'];
-  $post_like= intval($post_select['Likes'] + 1);
-  return $post_like;
-  //update_likes($post_like, $id);
-
-}
-function get_dis($id){
-  global $pdo;
-
-  $sql_select = "SELECT Likes FROM Postovi WHERE id = :post_id";
-  $select_stmt = $pdo->prepare($sql_select);
-  $select_stmt->execute(['post_id' => $id]);
-  $post_select = $select_stmt->fetch(PDO::FETCH_ASSOC);
-if($alredy_disliked == false){
-  $sql_dis = "UPDATE Liked_posts SET liked = :liked";
-  $dis_stmt = $pdo->prepare($sql_dis);
-  $dis_stmt->execute(['liked'=>0]);
-
-
-  echo (int)$post_select['Likes'];
-  $post_like= intval($post_select['Likes'] - 1);
-  return $post_like;}
-  //update_likes($post_like, $id);
-  $alredy_disliked = true;
-  global $alredy_disliked;
-  global $alredy_liked;
-  $alredy_liked = false;
-
-
-}
-function like($post_id, $user_id){
-  echo "Again";
-  global $pdo;
-  $select_likes = "SELECT liked FROM Liked_posts WHERE user_id = :user_id && post_id = :post_id";
-  $likes_stmt = $pdo->prepare($select_likes);
-  $likes_stmt->execute(['user_id' => $user_id, 'post_id' => $post_id]);
-  $likes_select = $likes_stmt->fetch();
-  if($likes_select){
-    $sql_dis = "UPDATE Liked_posts SET liked = :liked";
-    $dis_stmt = $pdo->prepare($sql_dis);
-    $dis_stmt->execute(['liked'=>1]);
-    return 1;
-
-  }
-  $zero_one = $likes_select->liked;
-
-  if($zero_one == 0){
-    if($create!=1){
-    echo "f";
-    #echo "Post Id: " . $post_id . "<br>" . "User Id: " . $user_id;
-    $sql = "INSERT INTO Liked_posts(user_id,post_id,liked) VALUES (:user_id, :post_id, :liked)";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute(["user_id"=>$user_id, "post_id" =>$post_id,"liked"=>1]);
-    $create = true;
-    return 1;
-  }
-}
-
-
-}
-
-function like_nope($post_id, $user_id){
-  global $pdo;
-  $select_likes = "SELECT liked FROM Liked_posts WHERE user_id = :user_id && post_id = :post_id";
-  $likes_stmt = $pdo->prepare($select_likes);
-  $likes_stmt->execute(['user_id' => $user_id, 'post_id' => $post_id]);
-  $likes_select = $likes_stmt->fetch();
-  $zero_one = $likes_select->liked;
-  if($zero_one == 1){
-    return 0;
-  }
-
-
-}*/
 
  ?>
