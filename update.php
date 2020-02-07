@@ -7,7 +7,7 @@ function update_likes($likes, $post_id){
   $stmt = $pdo->prepare($sql);
   $stmt->execute(['likes'=> $likes, "post_id" => $post_id ]);
   //$_SESSION['is_liked'] = true;
-
+  echo $likes;
 header("location: main.php");
 }
 
@@ -115,7 +115,7 @@ function change_password($username, $current_pass, $new_pass, $rpsw){
   $hashed_current = $select[0]->password;
   if($current_pass = $hashed_current){
     if($new_pass == $rpsw){
-
+    $new_pass = '*-MyNamesJeff-*' . $new_pass . '-+*48812';
     $new_pass = md5($new_pass);
     $change_pw_sql = "UPDATE Register SET password = :password WHERE username= :username";
     $change_pw_sql_stmt = $pdo->prepare($change_pw_sql);
@@ -134,6 +134,7 @@ if(isset($_POST['like_post'])){
   echo "post id: " . $post_id . "<br>";
   echo "user id: " . $user_id . "<br>";
   like($post_id, $user_id);
+
 }
 
 if(isset($_POST['dis_post'])){

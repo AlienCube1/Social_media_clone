@@ -14,7 +14,7 @@ foreach($fetch as $row){
 }
 
 //var_dump($arr);
-// get the q parameter from URL
+
 $q = $_REQUEST["q"];
 
 $hint = "";
@@ -35,5 +35,5 @@ if ($q !== "") {
 }
 
 // Output "no suggestion" if no hint was found or output correct values
-echo $hint === "" ? "no suggestion" : $hint;
+echo $hint === "" ? "Found nothing...." : $hint;
 ?>

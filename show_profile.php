@@ -9,33 +9,6 @@
 	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 	<script src="/javascripts/application.js" type="text/javascript" charset="utf-8" async defer></script>
 	<title>Lorem ipsum...</title>
-<style>
-
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  width: 200px;
-  background-color: #f1f1f1;
-}
-
-li a {
-  display: block;
-  color: #000;
-  padding: 8px 16px;
-  text-decoration: none;
-}
-
-/* Change the link color on hover */
-li a:hover {
-  background-color: #555;
-  color: white;
-}
-#para {
-  position:relative;
-  left:400px;
-}
-</style>
 </head>
 <body id="mainBody">
 	<header id="nav-wrapper">
@@ -53,47 +26,33 @@ li a:hover {
       </div>
     </nav>
   </header>
-
-
-
-<div class="profile_nav">
-  <ul>
-  <li><button type='button' onclick='my_acc()'>My Account</button></li>
-  <li><a href="news.asp">Privacy</a></li>
-  <li><a href="contact.asp">Administration</a></li>
-</ul>
-</div>
-<div id="para">
-</div>
-
-
-<script>
-function my_acc() {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      document.getElementById("para").innerHTML = this.responseText;
-    }
-  };
-  xhttp.open("POST", "acc_man.php", true);
-  xhttp.send();
-}
-</script>
-
-
-
-</body>
-
-
-
-</html>
-
-
-
-
-
-
+  <div id="content">
 <?php
+include_once('config.php');
+session_start();
+$username = $_GET['profile'];
+$sql = "SELECT username,date_of FROM Register WHERE username =:username";
+$sql_stmt = $pdo->prepare($sql);
+$sql_stmt->execute(['username'=>$username]);
+$post = $sql_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+foreach($post as $row){
+  echo "<p> Username: " . $row['username'] . "</p> ";
+  echo "<br>";
+  echo "<p> Joined: " . $row['date_of'] . "</p>";
+}
+?>
+<form action='create.php' method='post'>
+  <input type='hidden' name='user_to_add' value='<?php echo $username ?>'>
+  <input type='hidden' name='current_user'value="<?php echo $_SESSION['username'] ?>">
+  <input type='submit' name='Add_friend' value='Add Friend'>
+</form> 
+
+  </div>
+</body>
+</html>
+<?php
+
 
 
 

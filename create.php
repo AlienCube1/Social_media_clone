@@ -23,6 +23,7 @@ function register_insert($username, $password, $email, $code){
   global $pdo;
   global $confirm_code;
   $date_of = date("d/m/Y");
+  $password = '*-MyNamesJeff-*' . $password . '-+*48812';
   $hashed = md5($password);
   $sql = "INSERT INTO Register(username,password,email,code,date_of) VALUES (:username, :password, :email, :code, :date_of)";
   $stmt = $pdo->prepare($sql);
@@ -35,7 +36,8 @@ function register_insert($username, $password, $email, $code){
 			mail($email, "Potvrdite vašu email adresu", $message, "From: dimworks.contact@gmail.com");
 			echo "Uspješno ste napravili račun, poslali smo aktivacijski email na Vašu adresu: " . $email . "<br>";
 			echo " Niste dobili mail? Molimo provjerite spam mapu.";
-  header("location: index.php", true, 301); exit;
+      header("location: please_confirm.php");
+  //header("location: please_confirm.php", true, 301); exit;
 }
 
 
@@ -60,6 +62,15 @@ function check_avail($username, $mail){
     return $okay_go;
   }
   return $okay_go;
+}
+function add_friend($sender, $recipient){
+  global $pdo;
+  $sql = "INSERT INTO Friend(sender,recipient,confirmed) VALUES (:sender,:recipient,:confirmed)";
+  $stmt=$pdo->prepare($sql);
+  $stmt->execute(['sender'=>$sender,'recipient'=>$recipient,'confirmed'=>0]);
+
+
+
 }
 
 
@@ -101,5 +112,9 @@ if(isset($_POST['create_post'])){
   $desc  = $_POST['Desc'];
   insert_post($title, $desc);
 }
-
+if(isset($_POST['Add_friend'])){
+  $current = $_POST['current_user'];
+  $user_to_add = $_POST['user_to_add'];
+  add_friend($current, $user_to_add);
+}
  ?>

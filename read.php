@@ -32,6 +32,7 @@ function login_stamp($username){
 function login($username,$password){
 
   global $pdo;
+  $password = '*-MyNamesJeff-*' . $password . '-+*48812';
   $hashed = md5($password);
 
   $get_id = "SELECT id FROM Register WHERE username = :username && password = :password";
@@ -39,7 +40,15 @@ function login($username,$password){
   $id_stmt->execute(['username' => $username, 'password' => $hashed]);
   $id_post = $id_stmt->fetch();
 
+  $get_confirm = "SELECT confirmed FROM Register WHERE username =:username && confirmed =:confirmed";
+  $confirm_stmt = $pdo->prepare($get_confirm);
+  $confirm_stmt->execute(['username'=>$username, 'confirmed'=>1]);
+  $confirm_post = $confirm_stmt->fetch();
 
+  if(!$confirm_post){
+    header("location:please_confirm.php");
+  }
+  if($confirm_post){
   $get_user = "SELECT username,password FROM Register WHERE username =:username && password =:password && confirmed = :confirmed";
 	$stmt = $pdo->prepare($get_user);
 	$stmt->execute(['username' => $username, 'password' => $hashed, 'confirmed' => 1]);
@@ -63,6 +72,7 @@ function login($username,$password){
     $_SESSION['wrong_username_or_pw'] = true;
     header("location: index.php");
   }
+}
 }
 
 
